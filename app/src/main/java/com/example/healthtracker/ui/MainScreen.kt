@@ -65,3 +65,8 @@ fun TriageScreen() {
 fun SymptomsScreen() {
     TODO("Not yet implemented")
 }
+
+@Composable
+fun SettingsScreen() {
+    TODO("Not yet implemented")
+}

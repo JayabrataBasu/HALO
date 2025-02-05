@@ -26,6 +26,8 @@ private val DarkColorScheme = darkColorScheme(
     onTertiary = Color.White,
     onSurface = Color.White,
 )
+// Add to Theme.kt
+val ErrorRed = Color(0xFFB00020)
 
 private val LightColorScheme = lightColorScheme(
     primary = PrimaryBlue,
