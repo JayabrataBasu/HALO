@@ -26,7 +26,6 @@ import androidx.compose.material.icons.filled.Settings
 
 
 class MainActivity : ComponentActivity() {
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -39,13 +38,12 @@ class MainActivity : ComponentActivity() {
 
 data class TabItem(val title: String, val icon: androidx.compose.ui.graphics.vector.ImageVector)
 
-data class Symptom @RequiresApi(Build.VERSION_CODES.O) constructor(
+data class Symptom(
     val name: String,
     val severity: Int,
     val timestamp: LocalDateTime = LocalDateTime.now()
 )
 
-@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen() {
@@ -113,7 +111,6 @@ fun MainScreen() {
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun SymptomsScreen() {
 
@@ -249,7 +246,6 @@ fun ProfileField(label: String, value: String) {
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Preview(showBackground = true)
 @Composable
 fun MainScreenPreview() {
