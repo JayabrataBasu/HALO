@@ -6,91 +6,125 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.compose.material.icons.filled.Call
+import androidx.compose.material.icons.filled.Emergency
+import androidx.compose.ui.graphics.Color
 
 @Composable
 fun TriageScreen(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onEmergencyCall: () -> Unit = {},
+    onStartAssessment: () -> Unit = {}
 ) {
-    var currentStep by remember { mutableStateOf(0) }
-    val scrollState = rememberScrollState()
-
+    var showEmergencyDialog by remember { mutableStateOf(false) }
+    
     Column(
         modifier = modifier
             .fillMaxSize()
             .padding(16.dp)
-            .verticalScroll(scrollState)
     ) {
-        Text(
-            text = "Symptom Assessment",
-            style = MaterialTheme.typography.headlineMedium,
-            modifier = Modifier.padding(bottom = 16.dp)
-        )
-
-        LinearProgressIndicator(
-            progress = (currentStep + 1) / 5f,
+        // Emergency Card
+        ElevatedCard(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 16.dp)
-        )
-
-        Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp)
+                .padding(bottom = 16.dp),
+            colors = CardDefaults.elevatedCardColors(
+                containerColor = MaterialTheme.colorScheme.errorContainer
+            )
         ) {
             Column(
-                modifier = Modifier
-                    .padding(16.dp)
-                    .fillMaxWidth()
+                modifier = Modifier.padding(16.dp)
             ) {
-                Text(
-                    text = "Question ${currentStep + 1} of 5",
-                    style = MaterialTheme.typography.titleMedium,
-                    color = MaterialTheme.colorScheme.primary
-                )
-
-                Text(
-                    text = getQuestionForStep(currentStep),
-                    style = MaterialTheme.typography.headlineSmall,
-                    modifier = Modifier.padding(vertical = 16.dp)
-                )
-
-                Column(
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.padding(bottom = 8.dp)
                 ) {
-                    getOptionsForStep(currentStep).forEach { option ->
-                        OutlinedButton(
-                            onClick = {
-                                if (currentStep < 4) currentStep++
-                            },
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            Text(option)
-                        }
-                    }
+                    Icon(
+                        Icons.Filled.Emergency,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.error
+                    )
+                    Spacer(Modifier.width(8.dp))
+                    Text(
+                        "Emergency Services",
+                        style = MaterialTheme.typography.titleLarge,
+                        color = MaterialTheme.colorScheme.onErrorContainer
+                    )
+                }
+                
+                Button(
+                    onClick = { showEmergencyDialog = true },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.error
+                    ),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Icon(Icons.Default.Call, contentDescription = null)
+                    Spacer(Modifier.width(8.dp))
+                    Text("Call Emergency Services")
                 }
             }
         }
 
-        if (currentStep > 0) {
-            TextButton(
-                onClick = { currentStep-- },
-                modifier = Modifier.align(Alignment.Start)
+        // Quick Assessment Section
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.surfaceVariant
+            )
+        ) {
+            Column(
+                modifier = Modifier.padding(16.dp)
             ) {
-                Text("Previous Question")
+                Text(
+                    "Symptom Assessment",
+                    style = MaterialTheme.typography.titleMedium
+                )
+                Spacer(Modifier.height(8.dp))
+                Text(
+                    "Take a quick assessment to evaluate your symptoms",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                Spacer(Modifier.height(16.dp))
+                Button(
+                    onClick = onStartAssessment,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("Start Assessment")
+                }
             }
         }
+    }
 
-        if (currentStep == 4) {
-            Button(
-                onClick = { /* Handle completion */ },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 16.dp)
-            ) {
-                Text("Complete Assessment")
+    if (showEmergencyDialog) {
+        AlertDialog(
+            onDismissRequest = { showEmergencyDialog = false },
+            title = {
+                Text("Emergency Call")
+            },
+            text = {
+                Text("Are you sure you want to call emergency services?")
+            },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        onEmergencyCall()
+                        showEmergencyDialog = false
+                    },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.error
+                    )
+                ) {
+                    Text("Call Now")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showEmergencyDialog = false }) {
+                    Text("Cancel")
+                }
             }
-        }
+        )
     }
 }
 

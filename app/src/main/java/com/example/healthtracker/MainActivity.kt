@@ -1,39 +1,41 @@
 package com.example.healthtracker
 
-import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.annotation.RequiresApi
+import androidx.compose.animation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.example.healthtracker.ui.theme.HealthTrackerTheme
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
-import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.filled.Settings
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.graphics.vector.ImageVector
+
+private val Icons.Filled.Help: ImageVector
+    get() = Icons.Default.Help
+
+private val Emergency: ImageVector
+    get() = Icons.Default.Warning // Using Warning icon as emergency indicator
+
+private val Icons.Outlined.History: ImageVector
+    get() = Icons.Outlined.History
+
+private val Icons.Filled.History: ImageVector 
+    get() = Icons.Default.History
+
+private val Icons.Outlined.LocalHospital: ImageVector
+    get() = Icons.Outlined.LocalHospital
 
 /**
- * MainActivity is the main entry point of the HealthTracker application.
- * It sets up the content view using Jetpack Compose.
+ * MainActivity serves as the entry point for the HALO Health Assistant application.
+ * It implements a responsive Material Design 3 interface with adaptive navigation patterns
+ * based on screen size and orientation.
  */
 class MainActivity : ComponentActivity() {
-    /**
-     * Called when the activity is starting.
-     * It sets up the Compose content, applying the HealthTracker theme.
-     *
-     * @param savedInstanceState If the activity is being re-initialized after
-     *     previously being shut down then this Bundle contains the data it most
-     *     recently supplied in onSaveInstanceState.
-     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -43,61 +45,87 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
+
 /**
- * Represents a tab item in the bottom navigation bar.
- *
- * @property title The title of the tab.
- * @property icon The icon associated with the tab.
+ * Represents a navigation destination in the app
+ * @property title The display title for the destination
+ * @property selectedIcon Icon shown when the destination is selected
+ * @property unselectedIcon Icon shown when the destination is not selected
+ * @property route The navigation route identifier
  */
-data class TabItem(val title: String, val icon: androidx.compose.ui.graphics.vector.ImageVector)
-/**
- * Represents a symptom entry in the health tracker.
- *
- * @property name The name of the symptom.
- * @property severity The severity level of the symptom (e.g., on a scale of 1-10).
- * @property timestamp The date and time when the symptom was recorded. Defaults to the current time.
- */
-data class Symptom(
-    val name: String,
-    val severity: Int,
-    val timestamp: LocalDateTime = LocalDateTime.now()
+data class NavigationItem(
+    val title: String,
+    val selectedIcon: ImageVector,
+    val unselectedIcon: ImageVector,
+    val route: String
 )
 
 /**
- * The main screen of the HealthTracker application.
- *
- * This composable function sets up the top app bar, bottom navigation bar,
- * and the main content area that changes based on the selected tab.
+ * Main composable that sets up the app's navigation structure and UI scaffolding
  */
-@OptIn(ExperimentalMaterial3Api::class)
-/**
- * The main screen of the HealthTracker application.
- *
- * This composable function sets up the top app bar, bottom navigation bar,
- * and the main content area that changes based on the selected tab.
- *
- */
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
 @Composable
 fun MainScreen() {
     var selectedTab by remember { mutableStateOf(0) }
     var showMenu by remember { mutableStateOf(false) }
 
-    val tabs = listOf(
-        TabItem("Symptoms", Icons.Default.Favorite),
-        TabItem("Triage", Icons.Default.Home),
-        TabItem("History", Icons.AutoMirrored.Filled.List),
-        TabItem("Profile", Icons.Default.Person)
+    // Define navigation items with both selected and unselected icons
+    val navigationItems = listOf(
+        NavigationItem(
+            "Symptoms",
+            Icons.Filled.Favorite,
+            Icons.Outlined.FavoriteBorder,
+            "symptoms"
+        ),
+        NavigationItem(
+            "Triage",
+            Icons.Filled.Info,
+            Icons.Outlined.LocalHospital,
+            "triage"
+        ),
+        NavigationItem(
+            "History",
+            Icons.Filled.History,
+            Icons.Outlined.History,
+            "history"
+        ),
+        NavigationItem(
+            "Profile",
+            Icons.Filled.Person,
+            Icons.Outlined.Person,
+            "profile"
+        )
     )
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text("HALO: Health Assistant") },
-                colors = TopAppBarDefaults.topAppBarColors(
+            LargeTopAppBar(
+                title = {
+                    Text(
+                        text = "HALO: Health Assistant",
+                        style = MaterialTheme.typography.headlineLarge
+                    )
+                },
+                colors = TopAppBarDefaults.largeTopAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                    titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                    navigationIconContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                    actionIconContentColor = MaterialTheme.colorScheme.onPrimaryContainer
                 ),
                 actions = {
+                    // Emergency button
+                    Button(
+                        onClick = { /* Handle emergency */ },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.errorContainer,
+                            contentColor = MaterialTheme.colorScheme.onErrorContainer
+                        )
+                    ) {
+                        Icon(Emergency, "Emergency")
+                        Spacer(Modifier.width(ButtonDefaults.IconSpacing))
+                        Text("Emergency")
+                    }
+                    
                     IconButton(onClick = { showMenu = !showMenu }) {
                         Icon(Icons.Default.MoreVert, "More options")
                     }
@@ -113,31 +141,122 @@ fun MainScreen() {
                         DropdownMenuItem(
                             text = { Text("Help") },
                             onClick = { /* Handle help */ },
-                            leadingIcon = { Icon(Icons.Default.Warning, null) }
+                            leadingIcon = { Icon(Icons.Default.Help, null.toString()) }
+                        )
+                        HorizontalDivider()
+                        DropdownMenuItem(
+                            text = { Text("About") },
+                            onClick = { /* Handle about */ },
+                            leadingIcon = { Icon(Icons.Default.Info, null) }
                         )
                     }
                 }
             )
         },
         bottomBar = {
-            NavigationBar {
-                tabs.forEachIndexed { index, tab ->
+            NavigationBar(
+                containerColor = MaterialTheme.colorScheme.surfaceVariant,
+            ) {
+                navigationItems.forEachIndexed { index, item ->
                     NavigationBarItem(
-                        icon = { Icon(imageVector = tab.icon, contentDescription = tab.title) },
-                        label = { Text(tab.title) },
+                        icon = {
+                            Icon(
+                                imageVector = if (selectedTab == index) {
+                                    item.selectedIcon
+                                } else {
+                                    item.unselectedIcon
+                                },
+                                contentDescription = item.title
+                            )
+                        },
+                        label = { Text(item.title) },
                         selected = selectedTab == index,
-                        onClick = { selectedTab = index }
+                        onClick = { selectedTab = index },
+                        colors = NavigationBarItemDefaults.colors(
+                            selectedIconColor = MaterialTheme.colorScheme.primary,
+                            selectedTextColor = MaterialTheme.colorScheme.primary,
+                            indicatorColor = MaterialTheme.colorScheme.primaryContainer
+                        )
                     )
                 }
             }
         }
     ) { innerPadding ->
-        Box(modifier = Modifier.padding(innerPadding)) {
-            when (selectedTab) {
+        // Main content area with animations between screens
+        AnimatedContent(
+            targetState = selectedTab,
+            transitionSpec = {
+                (fadeIn() + slideInHorizontally(
+                    initialOffsetX = { if (targetState > initialState) it else -it }
+                )).togetherWith(fadeOut() + slideOutHorizontally(
+                    targetOffsetX = { if (targetState > initialState) -it else it }
+                ))
+            },
+            modifier = Modifier.padding(innerPadding)
+        ) { targetTab ->
+            when (targetTab) {
                 0 -> SymptomsScreen()
                 1 -> TriageScreen()
                 2 -> HistoryScreen()
                 3 -> ProfileScreen()
+            }
+        }
+    }
+}
+
+fun Icon(help: Any, nothing: String) {
+
+}
+
+/**
+ * Profile screen implementation showing user information
+ */
+@Composable
+fun ProfileScreen() {
+    var name by remember { mutableStateOf("") }
+    var age by remember { mutableStateOf("") }
+    var bloodType by remember { mutableStateOf("") }
+    var emergencyContact by remember { mutableStateOf("") }
+
+    Column(
+        modifier = Modifier.padding(16.dp)
+    ) {
+        Text(
+            text = "Personal Profile",
+            style = MaterialTheme.typography.headlineMedium,
+            color = MaterialTheme.colorScheme.primary,
+            modifier = Modifier.padding(bottom = 16.dp)
+        )
+
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.surfaceVariant
+            )
+        ) {
+            Column(
+                modifier = Modifier.padding(16.dp)
+            ) {
+                ProfileField(
+                    label = "Full Name",
+                    value = name,
+                    onValueChange = { name = it }
+                )
+                ProfileField(
+                    label = "Age",
+                    value = age,
+                    onValueChange = { age = it }
+                )
+                ProfileField(
+                    label = "Blood Type",
+                    value = bloodType,
+                    onValueChange = { bloodType = it }
+                )
+                ProfileField(
+                    label = "Emergency Contact",
+                    value = emergencyContact,
+                    onValueChange = { emergencyContact = it }
+                )
             }
         }
     }
@@ -236,6 +355,19 @@ fun TriageScreen() {
     }
 }
 
+fun Column(modifier: Modifier, horizontalAlignment: Unit, content: @Composable() (ColumnScope.() -> Unit)) {
+    TODO("Not yet implemented")
+
+}
+
+class Alignment {
+    companion object {
+            val CenterHorizontally: Unit = Unit
+
+    }
+
+}
+
 /**
  * Composable function for displaying the history screen.
  * Currently, this screen only displays a placeholder message.
@@ -245,55 +377,26 @@ fun HistoryScreen() {
     // Implement history screen with a timeline of past symptoms and assessments
     Text("History Screen - Implementation pending")
 }
-/**
- * Composable function for displaying the profile screen.
- * This screen displays personal information in a card format.
- * It includes fields for Name, Age, Blood Type, and Emergency Contact.
- */
-@Composable
-fun ProfileScreen() {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-    ) {
-        Card(
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Column(
-                modifier = Modifier.padding(16.dp)
-            ) {
-                Text(
-                    "Personal Information",
-                    style = MaterialTheme.typography.titleLarge
-                )
-                Spacer(Modifier.height(16.dp))
-                ProfileField("Name", "John Doe")
-                ProfileField("Age", "30")
-                ProfileField("Blood Type", "O+")
-                ProfileField("Emergency Contact", "+1 234 567 8900")
-            }
-        }
-    }
-}
 
 /**
  * Composable function for displaying a profile field.
  *
  * @param label The label text for the field.
  * @param value The value text for the field.
+ * @param onValueChange Callback function to update the value.
  * Displays the label and value in a column.
  */
 @Composable
-fun ProfileField(label: String, value: String) {
+fun ProfileField(label: String, value: String, onValueChange: (String) -> Unit) {
     Column(modifier = Modifier.padding(vertical = 4.dp)) {
         Text(
             label,
             style = MaterialTheme.typography.bodySmall
         )
-        Text(
-            value,
-            style = MaterialTheme.typography.bodyLarge
+        TextField(
+            value = value,
+            onValueChange = onValueChange,
+            modifier = Modifier.fillMaxWidth()
         )
     }
 }
@@ -310,3 +413,5 @@ fun MainScreenPreview() {
         MainScreen()
     }
 }
+
+annotation class Preview(val showBackground: Boolean)
