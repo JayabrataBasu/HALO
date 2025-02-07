@@ -8,6 +8,19 @@ import java.util.UUID
 import java.time.DayOfWeek
 
 data class Symptom(
+    /**
+     * The unique identifier for the symptom.
+     * This is generated using UUID to ensure uniqueness.
+     */
+
+    /**
+     * The severity of the symptom, typically on a scale of 1-10.
+     */
+
+    /**
+     * The time at which the symptom was recorded.
+     * Defaults to the current time if not specified.
+     */
     val id: String = UUID.randomUUID().toString(),
     val name: String,
     val severity: Int,
@@ -19,15 +32,35 @@ data class Symptom(
     val isRecurring: Boolean = false
 )
 
+/**
+ * Checks if the symptom is considered urgent based on severity and associated symptoms.
+ * @return True if the symptom is considered urgent, false otherwise.
+ */
 fun Symptom.isUrgent(): Boolean =
     severity > 7 || associatedSymptoms.size > 3
 
+/**
+ * Calculates the duration of the symptom in hours.
+ * @return The duration in hours, or 0 if the duration is not specified.
+ */
 fun Symptom.getDurationInHours(): Float =
     duration?.div(60f) ?: 0f
 
 
+/**
+ * Enum representing different categories of symptoms.
+ */
 enum class SymptomCategory {
     PAIN,
+    /**
+     * Respiratory symptoms, such as difficulty breathing.
+     */
+    /**
+     * Digestive symptoms, such as nausea or abdominal pain.
+     */
+    /**
+     * Neurological symptoms, such as headaches or dizziness.
+     */
     RESPIRATORY,
     DIGESTIVE,
     NEUROLOGICAL,
@@ -35,12 +68,24 @@ enum class SymptomCategory {
     OTHER
 }
 data class SymptomHistory(
+    /**
+     * The specific symptom entry.
+     */
+    /**
+     * Notes about the progression of the symptom over time.
+     */
+
     val symptom: Symptom,
     val progressNotes: List<String>,
     val medications: List<String>,
     val triggers: List<String>
 )
 
+
+/**
+ * Class responsible for analyzing trends in a list of symptoms.
+ * It provides insights into average severity, most frequent symptoms, peak times, and weekly patterns.
+ */
 
 class SymptomAnalytics {
     fun analyzeSymptomTrends(symptoms: List<Symptom>): SymptomTrends {
@@ -88,6 +133,16 @@ class SymptomAnalytics {
 }
 
 data class EnhancedSymptom(
+    /**
+     * Represents a symptom with enhanced details for comprehensive tracking.
+     * This class includes detailed information such as specific body locations, characteristics, triggers,
+     * relief factors, and the duration of the symptom.
+     *
+     * @property id Unique identifier for the enhanced symptom.
+     * @property name Name of the symptom.
+     * @property severity Severity level of the symptom.
+     * @property timestamp The exact time when the symptom occurred.
+     */
     val id: String,
     val name: String,
     val severity: Int,
@@ -99,16 +154,29 @@ data class EnhancedSymptom(
     val duration: Duration
 )
 
+/**
+ * Enum class representing possible body locations where a symptom can occur.
+ */
 enum class BodyLocation {
     HEAD, CHEST, ABDOMEN, BACK_UPPER, BACK_LOWER,
     ARM_LEFT, ARM_RIGHT, LEG_LEFT, LEG_RIGHT
 }
 
+/**
+ * Enum class representing various characteristics that a symptom might have.
+ */
 enum class SymptomCharacteristic {
     SHARP, DULL, THROBBING, BURNING, STABBING,
     CRAMPING, ACHING, TINGLING
 }
 
+/**
+ * Class responsible for tracking and analyzing symptoms over time.
+ * It allows adding new symptom entries, retrieving symptom history based on different time frames,
+ * and analyzing symptom patterns, such as frequency, average duration, and common triggers.
+ *
+ * This class acts as a central hub for managing symptom data and extracting meaningful information from it.
+ */
 class SymptomTracker {
     private val symptoms = mutableListOf<EnhancedSymptom>()
 
@@ -169,6 +237,9 @@ class SymptomTracker {
     }
 }
 
+/**
+ * Enum class representing different time frames for which symptom history can be retrieved.
+ */
 enum class TimeFrame {
     DAY, WEEK, MONTH
 }

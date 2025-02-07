@@ -21,11 +21,19 @@ import java.time.format.DateTimeFormatter
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Settings
 
-
-
-
-
+/**
+ * MainActivity is the main entry point of the HealthTracker application.
+ * It sets up the content view using Jetpack Compose.
+ */
 class MainActivity : ComponentActivity() {
+    /**
+     * Called when the activity is starting.
+     * It sets up the Compose content, applying the HealthTracker theme.
+     *
+     * @param savedInstanceState If the activity is being re-initialized after
+     *     previously being shut down then this Bundle contains the data it most
+     *     recently supplied in onSaveInstanceState.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -35,16 +43,40 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
-
+/**
+ * Represents a tab item in the bottom navigation bar.
+ *
+ * @property title The title of the tab.
+ * @property icon The icon associated with the tab.
+ */
 data class TabItem(val title: String, val icon: androidx.compose.ui.graphics.vector.ImageVector)
-
+/**
+ * Represents a symptom entry in the health tracker.
+ *
+ * @property name The name of the symptom.
+ * @property severity The severity level of the symptom (e.g., on a scale of 1-10).
+ * @property timestamp The date and time when the symptom was recorded. Defaults to the current time.
+ */
 data class Symptom(
     val name: String,
     val severity: Int,
     val timestamp: LocalDateTime = LocalDateTime.now()
 )
 
+/**
+ * The main screen of the HealthTracker application.
+ *
+ * This composable function sets up the top app bar, bottom navigation bar,
+ * and the main content area that changes based on the selected tab.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
+/**
+ * The main screen of the HealthTracker application.
+ *
+ * This composable function sets up the top app bar, bottom navigation bar,
+ * and the main content area that changes based on the selected tab.
+ *
+ */
 @Composable
 fun MainScreen() {
     var selectedTab by remember { mutableStateOf(0) }
@@ -111,6 +143,10 @@ fun MainScreen() {
     }
 }
 
+/**
+ * Composable function for displaying the symptoms screen.
+ * This function includes error handling.
+ */
 @Composable
 fun SymptomsScreen() {
 
@@ -134,13 +170,14 @@ fun SymptomsScreen() {
     // Rest of the implementation
 }
 
-
-// Rest of your code remains the same, just remove the empty format function
-
-
-private fun Any.format(dateTimeFormatter: DateTimeFormatter?) {
-
-}
+/**
+ * Composable function for displaying the triage screen.
+ *
+ * This screen provides quick access to emergency services and a quick assessment feature.
+ * It includes:
+ * - An emergency services card with a button to call emergency services.
+ * - A quick assessment card with a button to start an assessment.
+ */
 
 @Composable
 fun TriageScreen() {
@@ -199,12 +236,20 @@ fun TriageScreen() {
     }
 }
 
+/**
+ * Composable function for displaying the history screen.
+ * Currently, this screen only displays a placeholder message.
+ */
 @Composable
 fun HistoryScreen() {
     // Implement history screen with a timeline of past symptoms and assessments
     Text("History Screen - Implementation pending")
 }
-
+/**
+ * Composable function for displaying the profile screen.
+ * This screen displays personal information in a card format.
+ * It includes fields for Name, Age, Blood Type, and Emergency Contact.
+ */
 @Composable
 fun ProfileScreen() {
     Column(
@@ -232,6 +277,13 @@ fun ProfileScreen() {
     }
 }
 
+/**
+ * Composable function for displaying a profile field.
+ *
+ * @param label The label text for the field.
+ * @param value The value text for the field.
+ * Displays the label and value in a column.
+ */
 @Composable
 fun ProfileField(label: String, value: String) {
     Column(modifier = Modifier.padding(vertical = 4.dp)) {
@@ -246,6 +298,11 @@ fun ProfileField(label: String, value: String) {
     }
 }
 
+/**
+ * Preview function for the MainScreen.
+ *
+ * This allows developers to preview the UI design of the MainScreen composable.
+ */
 @Preview(showBackground = true)
 @Composable
 fun MainScreenPreview() {

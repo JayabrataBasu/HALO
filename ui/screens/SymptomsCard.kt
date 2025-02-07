@@ -33,11 +33,11 @@ fun SymptomsCard(
                     text = symptom,
                     style = MaterialTheme.typography.titleLarge
                 )
-
+                
                 Badge(
                     containerColor = when (severity) {
                         in 8..10 -> MaterialTheme.colorScheme.error
-                        in 4..7 -> MaterialTheme.colorScheme.error
+                        in 4..7 -> MaterialTheme.colorScheme.warning
                         else -> MaterialTheme.colorScheme.tertiary
                     }
                 ) {
@@ -63,7 +63,7 @@ fun SymptomsCard(
                     .padding(vertical = 8.dp),
                 color = when (severity) {
                     in 8..10 -> MaterialTheme.colorScheme.error
-                    in 4..7 -> MaterialTheme.colorScheme.error
+                    in 4..7 -> MaterialTheme.colorScheme.warning
                     else -> MaterialTheme.colorScheme.tertiary
                 }
             )
@@ -78,4 +78,4 @@ fun SymptomsCard(
             }
         }
     }
-}
+} 

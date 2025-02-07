@@ -1,6 +1,3 @@
-package com.example.healthtracker.ui.screens.symptoms
-
-import SymptomsCard
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -85,4 +82,4 @@ data class Symptom(
     val name: String,
     val description: String,
     val severity: Int
-)
+) 

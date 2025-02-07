@@ -114,4 +114,4 @@ private fun getOptionsForStep(step: Int): List<String> {
         4 -> listOf("Diabetes", "Heart condition", "Asthma", "None")
         else -> emptyList()
     }
-}
+} 

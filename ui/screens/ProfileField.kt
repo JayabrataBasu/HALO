@@ -1,5 +1,4 @@
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CornerBasedShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -28,9 +27,4 @@ fun ProfileField(
         ),
         shape = MaterialTheme.shapes.medium
     )
-}
-
-fun OutlinedTextField(value: String, onValueChange: (String) -> Unit, label: @Composable () -> Unit, modifier: Modifier, keyboardType: KeyboardType, colors: TextFieldColors, shape: CornerBasedShape) {
-
-}
- 
+} 

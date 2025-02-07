@@ -1,14 +1,11 @@
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-
 
 @Composable
 fun HistoryScreen(
@@ -62,7 +59,7 @@ fun HistoryScreen(
 }
 
 @Composable
-fun HistoryItem(
+private fun HistoryItem(
     date: String,
     description: String,
     priority: String
@@ -91,46 +88,18 @@ fun HistoryItem(
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
-            FilterChip(
-                selected = false, // Since it's a visual indicator, not a filter
-                onClick = { /* Handle click if needed */ },
-                label = { Text(priority) },
-                colors = androidx.compose.material3.FilterChipDefaults.filterChipColors(
+            Chip(
+                onClick = { },
+                colors = ChipDefaults.chipColors(
                     containerColor = when (priority) {
                         "High" -> MaterialTheme.colorScheme.errorContainer
-                        "Medium" -> MaterialTheme.colorScheme.errorContainer
+                        "Medium" -> MaterialTheme.colorScheme.warningContainer
                         else -> MaterialTheme.colorScheme.tertiaryContainer
-                    },
-                  labelColor = when (priority) {
-                        "High" -> MaterialTheme.colorScheme.onErrorContainer
-                        "Medium" -> MaterialTheme.colorScheme.onErrorContainer
-                        else -> MaterialTheme.colorScheme.onTertiaryContainer
-                    },
-
+                    }
                 )
-            )
+            ) {
+                Text(priority)
             }
         }
     }
-
-
-fun Chip(
-    onClick: () -> Unit,
-    colors: ChipColors,
-    modifier: Nothing,
-    enabled: Nothing,
-    label: Nothing,
-    labelTextStyle: Nothing,
-    labelColor: Nothing,
-    leadingIcon: Nothing,
-    trailingIcon: Nothing,
-    shape: Nothing,
-    elevation: Nothing,
-    border: Nothing,
-    minHeight: Nothing,
-    paddingValues: Nothing,
-    interactionSource: @Composable () -> Unit
-) {
-
-}
-
+} 
