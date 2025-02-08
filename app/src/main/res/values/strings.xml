@@ -43,4 +43,16 @@
         libero vel nunc consequat, quis tincidunt nisl eleifend. Cras bibendum enim a justo luctus
         vestibulum. Fusce dictum libero quis erat maximus, vitae volutpat diam dignissim.
     </string>
+
+    <string name="nav_header_desc">Navigation header</string>
+    
+    <!-- Navigation Drawer Menu Items -->
+    <string name="menu_first">First Screen</string>
+    <string name="menu_second">Second Screen</string>
+    <string name="menu_third">Third Screen</string>
+    <string name="menu_fourth">Fourth Screen</string>
+    
+    <!-- Navigation Drawer -->
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
 </resources>
