@@ -44,6 +44,8 @@
         vestibulum. Fusce dictum libero quis erat maximus, vitae volutpat diam dignissim.
     </string>
 
+    <string name="nav_header_title">Medical App</string>
+    <string name="nav_header_subtitle">Healthcare at your fingertips</string>
     <string name="nav_header_desc">Navigation header</string>
     
     <!-- Navigation Drawer Menu Items -->

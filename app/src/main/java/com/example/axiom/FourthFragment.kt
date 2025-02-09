@@ -7,6 +7,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.axiom.databinding.FragmentFourthBinding
+import com.google.android.material.snackbar.Snackbar
+import androidx.core.content.res.ResourcesCompat
 
 class FourthFragment : Fragment() {
 
@@ -24,8 +26,52 @@ class FourthFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.buttonFourth.setOnClickListener {
-            findNavController().navigate(R.id.action_FourthFragment_to_FirstFragment)
+        setupProfileFields()
+        setupEditButton()
+    }
+
+    private fun setupProfileFields() {
+        // Initially set fields to non-editable
+        binding.apply {
+            nameEdit.isEnabled = false
+            dobEdit.isEnabled = false
+            phoneEdit.isEnabled = false
+            emailEdit.isEnabled = false
+            insuranceEdit.isEnabled = false
+            policyEdit.isEnabled = false
+        }
+    }
+
+    private fun setupEditButton() {
+        var isEditing = false
+
+        binding.editButton.setOnClickListener {
+            isEditing = !isEditing
+            
+            // Toggle edit state
+            binding.apply {
+                nameEdit.isEnabled = isEditing
+                dobEdit.isEnabled = isEditing
+                phoneEdit.isEnabled = isEditing
+                emailEdit.isEnabled = isEditing
+                insuranceEdit.isEnabled = isEditing
+                policyEdit.isEnabled = isEditing
+
+                // Change button appearance
+                editButton.apply {
+                    text = if (isEditing) "Save" else "Edit"
+                    icon = ResourcesCompat.getDrawable(
+                        resources,
+                        if (isEditing) R.drawable.ic_save else R.drawable.ic_edit,
+                        null
+                    )
+                }
+
+                // Show success message when saving
+                if (!isEditing) {
+                    Snackbar.make(root, "Profile updated successfully", Snackbar.LENGTH_SHORT).show()
+                }
+            }
         }
     }
 
